@@ -1,3 +1,4 @@
-function sayHello() {
-    alert("Hello from JavaScript!");
+function testButton() {
+    document.getElementById("message").textContent =
+        "JavaScript is working too! 🚀";
 }
