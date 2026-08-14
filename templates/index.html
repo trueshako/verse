@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Test | Driflare</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -10,14 +11,81 @@
 
 <body>
 
+    <nav class="navbar">
+        <div class="logo">DRIFLARE</div>
+
+        <a href="#about" class="nav-link">About</a>
+    </nav>
+
     <main>
-        <h1>TEST</h1>
-        <p>Your Flask website is working! 🚀</p>
 
-        <button onclick="testButton()">Test Button</button>
+        <section class="hero">
 
-        <p id="message"></p>
+            <div class="badge">
+                <span class="dot"></span>
+                Flask is online
+            </div>
+
+            <h1>
+                Welcome to
+                <span>Test.</span>
+            </h1>
+
+            <p class="description">
+                A simple Flask-powered website running on
+                <strong>Driflare</strong>.
+            </p>
+
+            <div class="buttons">
+                <button id="testButton" class="primary-btn">
+                    Test Website
+                </button>
+
+                <a href="#about" class="secondary-btn">
+                    Learn More
+                </a>
+            </div>
+
+            <div id="message" class="message"></div>
+
+        </section>
+
+
+        <section id="about" class="about">
+
+            <div class="card">
+                <div class="icon">🐍</div>
+                <h2>Flask</h2>
+                <p>
+                    Python backend powering this website.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="icon">🎨</div>
+                <h2>CSS</h2>
+                <p>
+                    Modern styling and responsive design.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="icon">⚡</div>
+                <h2>JavaScript</h2>
+                <p>
+                    Interactive features running in your browser.
+                </p>
+            </div>
+
+        </section>
+
     </main>
+
+
+    <footer>
+        <p>© 2026 Driflare · Built with Flask</p>
+    </footer>
+
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 
