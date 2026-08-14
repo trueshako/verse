@@ -1,14 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Website</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test | Driflare</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
-    <h1>Hello World!</h1>
-    <button onclick="sayHello()">Click me</button>
+    <main>
+        <h1>TEST</h1>
+        <p>Your Flask website is working! 🚀</p>
 
-    <script src="/static/script.js"></script>
+        <button onclick="testButton()">Test Button</button>
+
+        <p id="message"></p>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
 </body>
 </html>
