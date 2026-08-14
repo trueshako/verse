@@ -1,93 +1,924 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Driflare Test · test.driflare.com</title>
+<meta name="description" content="Driflare — the holding company behind PZB and Yo Company. System status for test.driflare.com.">
 
-    <title>Test | Driflare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+  :root{
+    --bg: #0b0a07;
+    --bg-soft: #131109;
+    --bg-card: rgba(255,255,255,0.035);
+    --ember-1: #ff6a2a;
+    --ember-2: #ffb13b;
+    --text: #f3eee3;
+    --muted: #9c9585;
+    --muted-2: #6f6a5c;
+    --border: rgba(243,238,227,0.09);
+    --border-soft: rgba(243,238,227,0.05);
+    --radius-lg: 28px;
+    --radius-md: 18px;
+    --radius-sm: 10px;
+    --radius-pill: 999px;
+    --ease: cubic-bezier(.16,.8,.24,1);
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
+  }
+
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.55;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background:
+      radial-gradient(60% 45% at 82% 6%, rgba(255,106,42,0.14), transparent 60%),
+      radial-gradient(40% 30% at 12% 30%, rgba(255,177,59,0.06), transparent 60%);
+  }
+
+  a{ color:inherit; text-decoration:none; }
+
+  ::selection{ background: var(--ember-1); color:#140b06; }
+
+  :focus-visible{
+    outline: 2px solid var(--ember-2);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color: var(--muted);
+  }
+
+  .eyebrow .flare-dot{
+    color: var(--ember-1);
+  }
+
+  .container{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ---------- NAVBAR ---------- */
+  .nav-wrap{
+    position: sticky;
+    top: 20px;
+    z-index: 50;
+    display:flex;
+    justify-content:center;
+    padding: 0 20px;
+  }
+
+  .navbar{
+    width: 100%;
+    max-width: 880px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 24px;
+    padding: 12px 12px 12px 22px;
+    border-radius: var(--radius-pill);
+    background: rgba(19,17,9,0.6);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid var(--border);
+    box-shadow: 0 12px 32px -12px rgba(0,0,0,0.6);
+  }
+
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:1.02rem;
+    letter-spacing:0.01em;
+  }
+
+  .logo .mark{
+    width:22px; height:22px;
+    display:block;
+  }
+
+  .nav-links{
+    display:flex;
+    align-items:center;
+    gap: 6px;
+  }
+
+  .nav-links a{
+    font-size:0.86rem;
+    color: var(--muted);
+    padding: 9px 16px;
+    border-radius: var(--radius-pill);
+    transition: color 0.25s var(--ease), background 0.25s var(--ease);
+  }
+
+  .nav-links a:hover{
+    color: var(--text);
+    background: rgba(255,255,255,0.045);
+  }
+
+  .nav-cta{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing:0.04em;
+    color: #140b06;
+    background: linear-gradient(135deg, var(--ember-2), var(--ember-1));
+    padding: 10px 18px;
+    border-radius: var(--radius-pill);
+    white-space:nowrap;
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  }
+
+  .nav-cta:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px -6px rgba(255,106,42,0.5);
+  }
+
+  @media (max-width: 720px){
+    .nav-links{ display:none; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    z-index:1;
+    padding: 96px 0 88px;
+    display:grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 40px;
+    align-items:center;
+  }
+
+  .hero-copy .eyebrow{ margin-bottom: 22px; }
+
+  .hero h1{
+    font-family:'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2.6rem, 5.2vw, 4.3rem);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    max-width: 12ch;
+  }
+
+  .hero h1 em{
+    font-style: italic;
+    font-weight: 500;
+    background: linear-gradient(100deg, var(--ember-2), var(--ember-1) 60%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero-desc{
+    margin-top: 24px;
+    max-width: 46ch;
+    color: var(--muted);
+    font-size: 1.02rem;
+  }
+
+  .hero-desc strong{ color: var(--text); font-weight: 500; }
+
+  .hero-buttons{
+    margin-top: 36px;
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    color: #140b06;
+    background: linear-gradient(135deg, var(--ember-2), var(--ember-1));
+    padding: 15px 26px;
+    border: none;
+    border-radius: var(--radius-pill);
+    cursor:pointer;
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  }
+
+  .btn-primary:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px -10px rgba(255,106,42,0.55);
+  }
+
+  .btn-secondary{
+    font-size: 0.88rem;
+    color: var(--text);
+    padding: 15px 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    transition: border-color 0.25s var(--ease), background 0.25s var(--ease);
+  }
+
+  .btn-secondary:hover{
+    border-color: rgba(255,177,59,0.4);
+    background: rgba(255,255,255,0.03);
+  }
+
+  /* signature flare mark */
+  .flare-signature{
+    position:relative;
+    aspect-ratio: 1 / 1;
+    max-width: 380px;
+    justify-self:center;
+  }
+
+  .flare-signature svg{
+    width:100%; height:100%;
+    animation: spin-slow 60s linear infinite;
+  }
+
+  @keyframes spin-slow{
+    to{ transform: rotate(360deg); }
+  }
+
+  @media (max-width: 860px){
+    .hero{ grid-template-columns: 1fr; padding-top: 64px; }
+    .flare-signature{ order:-1; max-width: 220px; margin: 0 auto 12px; }
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{ position:relative; z-index:1; }
+
+  .section-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap: 24px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+
+  .section-head h2{
+    font-family:'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(1.7rem, 3vw, 2.3rem);
+    margin-top: 12px;
+  }
+
+  .section-head p{
+    max-width: 40ch;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  /* ---------- SYSTEM CHECK ---------- */
+  .system{
+    padding: 40px 0 100px;
+    border-top: 1px solid var(--border-soft);
+    margin-top: 20px;
+  }
+
+  .system-panel{
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+  }
+
+  .system-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+
+  .system-top h3{
+    font-family:'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.3rem;
+  }
+
+  .run-check{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    padding: 11px 20px;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    transition: border-color 0.25s var(--ease), background 0.25s var(--ease);
+  }
+
+  .run-check:hover{
+    border-color: rgba(255,177,59,0.45);
+    background: rgba(255,177,59,0.06);
+  }
+
+  .run-check .pulse{
+    width:7px; height:7px;
+    border-radius:50%;
+    background: var(--ember-1);
+    box-shadow: 0 0 0 0 rgba(255,106,42,0.6);
+  }
+
+  .run-check.checking .pulse{
+    animation: pulse-ring 1s ease-out infinite;
+  }
+
+  @keyframes pulse-ring{
+    0%{ box-shadow: 0 0 0 0 rgba(255,106,42,0.55); }
+    100%{ box-shadow: 0 0 0 10px rgba(255,106,42,0); }
+  }
+
+  .check-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 720px){
+    .check-grid{ grid-template-columns: 1fr; }
+  }
+
+  .check-item{
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 22px;
+    background: rgba(255,255,255,0.015);
+  }
+
+  .check-item-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 14px;
+  }
+
+  .check-item .icon{ font-size: 1.3rem; }
+
+  .status-chip{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    color: var(--muted-2);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    transition: all 0.3s var(--ease);
+  }
+
+  .status-chip.ok{
+    color: #1a1206;
+    background: linear-gradient(135deg, var(--ember-2), var(--ember-1));
+    border-color: transparent;
+  }
+
+  .check-item h4{
+    font-weight: 500;
+    font-size: 0.98rem;
+    margin-bottom: 4px;
+  }
+
+  .check-item p{
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .system-message{
+    margin-top: 20px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    min-height: 18px;
+  }
+
+  .system-message.live{ color: var(--ember-2); }
+
+  /* ---------- VENTURES / NETWORK ---------- */
+  .ventures{
+    padding: 20px 0 110px;
+  }
+
+  .network{
+    display:grid;
+    grid-template-columns: 260px 1fr;
+    gap: 0 40px;
+  }
+
+  @media (max-width: 860px){
+    .network{ grid-template-columns: 1fr; }
+  }
+
+  .root-node{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    padding-top: 6px;
+  }
+
+  .root-card{
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 22px 24px;
+    background: linear-gradient(160deg, rgba(255,106,42,0.09), rgba(255,255,255,0.02));
+    width: 100%;
+  }
+
+  .root-card .eyebrow{ margin-bottom: 8px; }
+
+  .root-card h3{
+    font-family:'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.4rem;
+  }
+
+  .root-card p{
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .connector{
+    display:none;
+  }
+
+  @media (min-width: 861px){
+    .connector{
+      display:block;
+      position:absolute;
+      left: 24px;
+      top: 100%;
+      width: 1px;
+      height: calc(100% - 20px);
+      background: linear-gradient(var(--border), transparent);
+    }
+  }
+
+  .venture-list{
+    display:flex;
+    flex-direction:column;
+    gap: 18px;
+  }
+
+  .venture-card{
+    position:relative;
+    display:grid;
+    grid-template-columns: 56px 1fr auto;
+    align-items:center;
+    gap: 20px;
+    padding: 22px 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    transition: transform 0.3s var(--ease), border-color 0.3s var(--ease), background 0.3s var(--ease);
+  }
+
+  .venture-card:hover{
+    transform: translateX(4px);
+    border-color: rgba(255,177,59,0.35);
+    background: rgba(255,255,255,0.045);
+  }
+
+  .venture-icon{
+    width: 56px; height:56px;
+    border-radius: var(--radius-sm);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--ember-2);
+  }
+
+  .venture-body h4{
+    font-family:'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.15rem;
+    margin-bottom: 4px;
+  }
+
+  .venture-body p{
+    font-size: 0.87rem;
+    color: var(--muted);
+    max-width: 46ch;
+  }
+
+  .venture-link{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--muted);
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: color 0.25s var(--ease), gap 0.25s var(--ease);
+  }
+
+  .venture-card:hover .venture-link{
+    color: var(--ember-2);
+  }
+
+  @media (max-width: 560px){
+    .venture-card{ grid-template-columns: 44px 1fr; }
+    .venture-link{ grid-column: 1 / -1; margin-top: 4px; }
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about{
+    padding: 20px 0 120px;
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .about-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items:start;
+  }
+
+  @media (max-width: 860px){
+    .about-grid{ grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  .about-copy h2{
+    font-family:'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+    line-height: 1.15;
+    margin-bottom: 22px;
+  }
+
+  .about-copy h2 em{
+    font-style: italic;
+    color: var(--ember-2);
+  }
+
+  .about-copy p{
+    color: var(--muted);
+    max-width: 48ch;
+  }
+
+  .about-facts{
+    display:flex;
+    flex-direction:column;
+    gap: 22px;
+  }
+
+  .fact{
+    display:flex;
+    gap: 18px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .fact:last-child{ border-bottom:none; padding-bottom:0; }
+
+  .fact .num{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ember-2);
+    padding-top: 3px;
+  }
+
+  .fact h5{
+    font-weight: 500;
+    font-size: 0.98rem;
+    margin-bottom: 4px;
+  }
+
+  .fact p{
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top: 1px solid var(--border-soft);
+    padding: 36px 0 44px;
+  }
+
+  .footer-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .footer-inner .logo{ font-size: 0.92rem; }
+
+  .footer-links{
+    display:flex;
+    gap: 22px;
+  }
+
+  .footer-links a{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+    transition: color 0.25s var(--ease);
+  }
+
+  .footer-links a:hover{ color: var(--ember-2); }
+
+  .footer-copy{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted-2);
+  }
+</style>
 </head>
-
 <body>
 
+  <div class="nav-wrap">
     <nav class="navbar">
-        <div class="logo">DRIFLARE</div>
-
-        <a href="#about" class="nav-link">About</a>
+      <div class="logo">
+        <svg class="mark" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C12 2 8 8 8 13C8 16.3 9.8 19 12 19C14.2 19 16 16.3 16 13C16 8 12 2 12 2Z" fill="url(#navFlare)"/>
+          <defs>
+            <linearGradient id="navFlare" x1="8" y1="2" x2="16" y2="19" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FFB13B"/>
+              <stop offset="1" stop-color="#FF6A2A"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        DRIFLARE
+      </div>
+      <div class="nav-links">
+        <a href="#system">Status</a>
+        <a href="#ventures">Ventures</a>
+        <a href="#about">About</a>
+      </div>
+      <a href="#ventures" class="nav-cta">View ventures</a>
     </nav>
+  </div>
 
-    <main>
+  <main class="container">
 
-        <section class="hero">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="flare-dot">●</span> test.driflare.com — live environment</p>
+        <h1>Small fires,<br><em>built to spread.</em></h1>
+        <p class="hero-desc">
+          Driflare is the holding company behind a growing set of independent ventures —
+          currently running <strong>PZB</strong> and <strong>Yo Company</strong> under one roof.
+          This page confirms the backend, styling and scripting layer are all lit and responding.
+        </p>
+        <div class="hero-buttons">
+          <button id="testButton" class="btn-primary">Run system check</button>
+          <a href="#ventures" class="btn-secondary">See the ventures</a>
+        </div>
+      </div>
 
-            <div class="badge">
-                <span class="dot"></span>
-                Flask is online
+      <div class="flare-signature" aria-hidden="true">
+        <svg viewBox="0 0 200 200" fill="none">
+          <circle cx="100" cy="100" r="70" stroke="rgba(243,238,227,0.08)" stroke-width="1"/>
+          <circle cx="100" cy="100" r="46" stroke="rgba(243,238,227,0.08)" stroke-width="1"/>
+          <g stroke-linecap="round">
+            <line x1="100" y1="6" x2="100" y2="26" stroke="#FF6A2A" stroke-width="2"/>
+            <line x1="100" y1="174" x2="100" y2="194" stroke="rgba(243,238,227,0.15)" stroke-width="1"/>
+            <line x1="6" y1="100" x2="26" y2="100" stroke="rgba(243,238,227,0.15)" stroke-width="1"/>
+            <line x1="174" y1="100" x2="194" y2="100" stroke="#FFB13B" stroke-width="2"/>
+            <line x1="35" y1="35" x2="49" y2="49" stroke="rgba(243,238,227,0.12)" stroke-width="1"/>
+            <line x1="151" y1="151" x2="165" y2="165" stroke="rgba(243,238,227,0.12)" stroke-width="1"/>
+            <line x1="165" y1="35" x2="151" y2="49" stroke="rgba(243,238,227,0.12)" stroke-width="1"/>
+            <line x1="49" y1="151" x2="35" y2="165" stroke="rgba(243,238,227,0.12)" stroke-width="1"/>
+          </g>
+          <path d="M100 62C100 62 82 90 82 110C82 124.4 90.3 136 100 136C109.7 136 118 124.4 118 110C118 90 100 62 100 62Z" fill="url(#heroFlare)"/>
+          <defs>
+            <linearGradient id="heroFlare" x1="82" y1="62" x2="118" y2="136" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FFB13B"/>
+              <stop offset="1" stop-color="#FF6A2A"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </section>
+
+    <section class="system" id="system">
+      <div class="system-panel">
+        <div class="system-top">
+          <div>
+            <p class="eyebrow">Diagnostics</p>
+            <h3>Stack status</h3>
+          </div>
+          <button id="checkButton" class="run-check">
+            <span class="pulse"></span>
+            Run system check
+          </button>
+        </div>
+
+        <div class="check-grid">
+          <div class="check-item" data-check="flask">
+            <div class="check-item-top">
+              <span class="icon">🐍</span>
+              <span class="status-chip">idle</span>
             </div>
-
-            <h1>
-                Welcome to
-                <span>Test.</span>
-            </h1>
-
-            <p class="description">
-                A simple Flask-powered website running on
-                <strong>Driflare</strong>.
-            </p>
-
-            <div class="buttons">
-                <button id="testButton" class="primary-btn">
-                    Test Website
-                </button>
-
-                <a href="#about" class="secondary-btn">
-                    Learn More
-                </a>
+            <h4>Flask</h4>
+            <p>Python backend serving this page.</p>
+          </div>
+          <div class="check-item" data-check="css">
+            <div class="check-item-top">
+              <span class="icon">🎨</span>
+              <span class="status-chip">idle</span>
             </div>
-
-            <div id="message" class="message"></div>
-
-        </section>
-
-
-        <section id="about" class="about">
-
-            <div class="card">
-                <div class="icon">🐍</div>
-                <h2>Flask</h2>
-                <p>
-                    Python backend powering this website.
-                </p>
+            <h4>Styling</h4>
+            <p>Layout, type and motion system.</p>
+          </div>
+          <div class="check-item" data-check="js">
+            <div class="check-item-top">
+              <span class="icon">⚡</span>
+              <span class="status-chip">idle</span>
             </div>
+            <h4>JavaScript</h4>
+            <p>Interactivity running in your browser.</p>
+          </div>
+        </div>
 
-            <div class="card">
-                <div class="icon">🎨</div>
-                <h2>CSS</h2>
-                <p>
-                    Modern styling and responsive design.
-                </p>
+        <p class="system-message" id="systemMessage"></p>
+      </div>
+    </section>
+
+    <section class="ventures" id="ventures">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Portfolio</p>
+          <h2>One company,<br>a few fires burning.</h2>
+        </div>
+        <p>Every venture runs on its own subdomain, its own team, its own pace — Driflare just keeps the lights on.</p>
+      </div>
+
+      <div class="network">
+        <div class="root-node">
+          <div class="root-card">
+            <p class="eyebrow">Parent</p>
+            <h3>Driflare</h3>
+            <p>driflare.com</p>
+          </div>
+          <div class="connector"></div>
+        </div>
+
+        <div class="venture-list">
+          <a class="venture-card" href="https://pzb.driflare.com" target="_blank" rel="noopener">
+            <span class="venture-icon">P</span>
+            <div class="venture-body">
+              <h4>PZB — Protekt Ze Brand</h4>
+              <p>Brand protection and identity systems, built for creators who take their name seriously.</p>
             </div>
+            <span class="venture-link">pzb.driflare.com ↗</span>
+          </a>
 
-            <div class="card">
-                <div class="icon">⚡</div>
-                <h2>JavaScript</h2>
-                <p>
-                    Interactive features running in your browser.
-                </p>
+          <a class="venture-card" href="https://yoc.driflare.com" target="_blank" rel="noopener">
+            <span class="venture-icon">Y</span>
+            <div class="venture-body">
+              <h4>Yo Company</h4>
+              <p>An independent venture operating under the Driflare umbrella.</p>
             </div>
+            <span class="venture-link">yoc.driflare.com ↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
 
-        </section>
+    <section class="about" id="about">
+      <div class="about-grid">
+        <div class="about-copy">
+          <h2>Built to hold <em>more than one flame</em> at a time.</h2>
+          <p>
+            Driflare exists to give independent products a shared backbone — infrastructure,
+            design language and tooling — without forcing them into one identity. Each venture
+            keeps its own name, its own audience, and its own subdomain.
+          </p>
+        </div>
+        <div class="about-facts">
+          <div class="fact">
+            <span class="num">01</span>
+            <div>
+              <h5>Shared infrastructure</h5>
+              <p>Hosting, tooling and backend patterns are built once, reused across every venture.</p>
+            </div>
+          </div>
+          <div class="fact">
+            <span class="num">02</span>
+            <div>
+              <h5>Independent identity</h5>
+              <p>Each company keeps its own brand, domain and voice — Driflare stays in the background.</p>
+            </div>
+          </div>
+          <div class="fact">
+            <span class="num">03</span>
+            <div>
+              <h5>Built to expand</h5>
+              <p>New ventures plug into the same foundation as they launch, without a rebuild.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    </main>
+  </main>
 
+  <footer>
+    <div class="container footer-inner">
+      <div class="logo">
+        <svg class="mark" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C12 2 8 8 8 13C8 16.3 9.8 19 12 19C14.2 19 16 16.3 16 13C16 8 12 2 12 2Z" fill="url(#footerFlare)"/>
+          <defs>
+            <linearGradient id="footerFlare" x1="8" y1="2" x2="16" y2="19" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FFB13B"/>
+              <stop offset="1" stop-color="#FF6A2A"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        DRIFLARE
+      </div>
+      <div class="footer-links">
+        <a href="#system">Status</a>
+        <a href="#ventures">Ventures</a>
+        <a href="#about">About</a>
+      </div>
+      <p class="footer-copy">© 2026 Driflare · test.driflare.com</p>
+    </div>
+  </footer>
 
-    <footer>
-        <p>© 2026 Driflare · Built with Flask</p>
-    </footer>
+  <script>
+    (function(){
+      const testButton = document.getElementById('testButton');
+      const checkButton = document.getElementById('checkButton');
+      const message = document.getElementById('systemMessage');
+      const items = document.querySelectorAll('.check-item');
 
+      function resetChecks(){
+        items.forEach(item => {
+          const chip = item.querySelector('.status-chip');
+          chip.textContent = 'idle';
+          chip.classList.remove('ok');
+        });
+        message.textContent = '';
+        message.classList.remove('live');
+      }
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+      function runCheck(){
+        if (checkButton.classList.contains('checking')) return;
+        resetChecks();
+        checkButton.classList.add('checking');
+        message.textContent = 'Running diagnostics…';
+        message.classList.add('live');
+
+        items.forEach((item, i) => {
+          setTimeout(() => {
+            const chip = item.querySelector('.status-chip');
+            chip.textContent = 'online';
+            chip.classList.add('ok');
+          }, 320 * (i + 1));
+        });
+
+        setTimeout(() => {
+          checkButton.classList.remove('checking');
+          message.textContent = 'All systems online — Flask, CSS and JavaScript are responding normally.';
+        }, 320 * items.length + 200);
+      }
+
+      testButton.addEventListener('click', runCheck);
+      checkButton.addEventListener('click', runCheck);
+    })();
+  </script>
 
 </body>
 </html>
