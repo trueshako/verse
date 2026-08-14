@@ -311,3 +311,31 @@ footer {
     }
 
 }
+
+.nav-link {
+    margin-left: 20px;
+}
+
+.page {
+    max-width: 900px;
+    min-height: 70vh;
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 60px 25px;
+}
+
+.page h1 {
+    font-size: 70px;
+    margin-bottom: 20px;
+}
+
+.page p {
+    color: #999;
+    font-size: 18px;
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
